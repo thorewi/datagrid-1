@@ -423,7 +423,11 @@ class DataGrid extends Control
 	 * @var string|null
 	 */
 	private $componentFullName;
-
+	
+	/**
+	 * @var callable
+	 */
+	protected $filterOnRender;
 
 	public function __construct(?IContainer $parent = null, ?string $name = null)
 	{
@@ -1417,6 +1421,10 @@ class DataGrid extends Control
 	public function createComponentFilter(): Form
 	{
 		$form = new Form($this, 'filter');
+		
+		if ($this->filterOnRender) {
+			$form->onRender[] = $this->filterOnRender;
+		}
 
 		$form->setMethod(static::$formMethod);
 
@@ -3344,5 +3352,10 @@ class DataGrid extends Control
 
 		return $presenter;
 	}
-
+	
+	public function setFilterOnRender($filterOnRender): self
+	{
+		$this->filterOnRender = $filterOnRender;
+		return $this;
+	}
 }
